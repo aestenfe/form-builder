@@ -1,0 +1,73 @@
+[
+  {
+    "id": 1,
+    "question": "What is the name of your business?",
+    "required": true,
+    "type": "text",
+    "range": [1, 2000]
+  },
+  {
+    "id": 2,
+    "question": "What is the name of the role?",
+    "required": true,
+    "type": "select",
+    "options": [
+      {
+        "id": 1,
+        "name": "Customer Success"
+      },
+      {
+        "id": 2,
+        "name": "Fullstack Engineer"
+      },
+      {
+        "id": 3,
+        "name": "Product Manager"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "question": "What is your primary business?",
+    "required": true,
+    "type": "select",
+    "options": [
+      {
+        "id": 1,
+        "name": "Accounting"
+      },
+      {
+        "id": 2,
+        "name": "Software development"
+      },
+      {
+        "id": 3,
+        "name": "Landscaping"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "question": "Is a technical background required?",
+    "required": true,
+    "type": "radio",
+    "options": [
+      {
+        "id": 1,
+        "value": "Yes"
+      },
+      {
+        "id": 2,
+        "value": "No"
+      }
+    ],
+    "render": [
+      {
+        "rule": [[2, 2]]
+      },
+      {
+        "rule": [[2, 3], [3, 2]]
+      }
+    ]
+  }
+]

@@ -1,24 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
+import Button from "./components/Button";
+import FormContainer from "./components/FormContainer";
+import FormElement from "./components/FormElement";
+import Input from "./components/Input";
+import Radio from "./components/Radio";
+import Title from "./components/Title";
 
 function App() {
+  const [formData, setFormData] = useState([]);
+
+  useEffect(() => {
+    fetch("./form.json")
+      .then((data) => data.json())
+      .then((data) => {
+        setFormData(data);
+      });
+  }, []);
+
+  const createField = (data) => {
+    switch (data.type) {
+      case "text":
+        return <Input type="text" />;
+      case "select":
+        return (
+          <Select
+            options={data.options.map((option) => ({ label: option.name, value: option.name }))}
+            theme={(theme) => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary50: "#B372AC",
+                primary25: "#DED7DD",
+                primary: "#674263",
+              },
+            })}
+          />
+        );
+      case "radio":
+        return <Radio data={data} />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <FormContainer>
+      <Title>Form Builder</Title>
+      {formData.map((data) => (
+        <FormElement key={data.id}>
+          <p>{data.question}</p>
+          {createField(data)}
+        </FormElement>
+      ))}
+      <Button>Post Job</Button>
+    </FormContainer>
   );
 }
 

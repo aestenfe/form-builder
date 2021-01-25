@@ -9,13 +9,30 @@ import Title from "./components/Title";
 
 function App() {
   const [formData, setFormData] = useState([]);
+  // TODO: Use values variable for form fields
+  // and remove eslint-disable
+  // eslint-disable-next-line no-unused-vars
+  const [values, setValues] = useState([]);
 
-  useEffect(() => {
-    fetch("./form.json")
-      .then((data) => data.json())
+  const importJsonData = () => {
+    fetch("./form.json", {
+      headers: {
+        "Content-Type": "application.json",
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
       .then((data) => {
         setFormData(data);
+        setValues(data.map((field) => ({
+          id: field.id,
+          value: (field.type === "text" ? "" : 0),
+        })));
       });
+  };
+
+  useEffect(() => {
+    importJsonData();
   }, []);
 
   const createField = (data) => {
@@ -47,12 +64,12 @@ function App() {
   return (
     <FormContainer>
       <Title>Form Builder</Title>
-      {formData.map((data) => (
+      {formData ? formData.map((data) => (
         <FormElement key={data.id}>
           <p>{data.question}</p>
           {createField(data)}
         </FormElement>
-      ))}
+      )) : null}
       <Button>Post Job</Button>
     </FormContainer>
   );

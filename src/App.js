@@ -24,6 +24,7 @@ function App() {
         setValues(data.map((field) => ({
           id: field.id,
           value: (field.type === "text" ? "" : 0),
+          error: "",
         })));
       });
   };
@@ -76,27 +77,39 @@ function App() {
     return result;
   };
 
+  const createOptions = (options) => options.map((option) => (
+    { label: option.name, value: option.id }));
+
+  const defaultTheme = (theme) => ({
+    ...theme,
+    colors: {
+      ...theme.colors,
+      primary50: "#B372AC",
+      primary25: "#DED7DD",
+      primary: "#674263",
+    },
+  });
+
   const createField = (data) => {
     switch (data.type) {
       case "text": {
         const value = values.find((element) => data.id === element.id);
-        return <Input type="text" name={data.id} value={value ? value.value : ""} onChange={handleValueChange} />;
+        return (
+          <Input
+            type="text"
+            name={data.id}
+            value={value ? value.value : ""}
+            onChange={handleValueChange}
+          />
+        );
       }
       case "select":
         return (
           <Select
-            options={data.options.map((option) => ({ label: option.name, value: option.id }))}
+            options={createOptions(data.options)}
             name={data.id}
             onChange={handleSelectChange}
-            theme={(theme) => ({
-              ...theme,
-              colors: {
-                ...theme.colors,
-                primary50: "#B372AC",
-                primary25: "#DED7DD",
-                primary: "#674263",
-              },
-            })}
+            theme={defaultTheme}
           />
         );
       case "radio":

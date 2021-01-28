@@ -1,5 +1,23 @@
 # Form Builder
 
+The application will use a json file (Part 1) and create a form with validation.
+If a form field is not validate, an error message will appear at the specific field.
+If the validation succeed, an alert appears.
+
+## Package installment and Script 
+
+### `npm install`
+
+Installs the required packages.
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
 ## Part 1
 
 For part 1 I created a json file which will contain the information for the form.
@@ -80,16 +98,8 @@ For part 1 I created a json file which will contain the information for the form
 ]
 ```
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Tasks for the future
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Testing with Jest and the react testing library
+- Splitting the `App.js` in smaller parts with `ImportService` & `ValidationService`
+- Creating an automated component documentation with ie. `docgen`

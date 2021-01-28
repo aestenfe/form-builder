@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
+import CustomSelect from "./components/CustomSelect";
 import Button from "./components/Button";
 import FormContainer from "./components/FormContainer";
 import FormElement from "./components/FormElement";
@@ -24,7 +24,7 @@ function App() {
         setValues(data.map((field) => ({
           id: field.id,
           value: (field.type === "text" ? "" : 0),
-          error: "",
+          errors: [],
         })));
       });
   };
@@ -42,27 +42,12 @@ function App() {
     }));
   };
 
-  const handleValueChange = ({ target: { name, value } }) => {
-    updateValue(parseInt(name, 10), value);
-  };
-
-  const handleSelectChange = ({ value }, { name }) => {
-    updateValue(name, value);
-  };
-
-  const handleClickValidate = () => {
-    console.log(values);
-    // eslint-disable-next-line no-alert
-    alert("Valid form");
-  };
-
-  const renderCheck = (data) => {
-    if (!data.render) {
+  const renderCheck = ({ render }) => {
+    if (!render) {
       return true;
     }
-
     let result = false;
-    data.render.forEach((rules) => {
+    render.forEach((rules) => {
       let { length } = rules.rule;
       rules.rule.forEach((rule) => {
         const value = values.find((element) => element.id === rule[0]);
@@ -77,43 +62,81 @@ function App() {
     return result;
   };
 
+  const handleValueChange = ({ target: { name, value } }) => {
+    updateValue(parseInt(name, 10), value);
+  };
+
+  const handleSelectChange = ({ value }, { name }) => {
+    updateValue(name, value);
+  };
+
+  const handleRadioChange = ({ target: { name, value } }) => {
+    updateValue(parseInt(name, 10), parseInt(value, 10));
+  };
+
   const createOptions = (options) => options.map((option) => (
     { label: option.name, value: option.id }));
 
-  const defaultTheme = (theme) => ({
-    ...theme,
-    colors: {
-      ...theme.colors,
-      primary50: "#B372AC",
-      primary25: "#DED7DD",
-      primary: "#674263",
-    },
-  });
+  const handleClickValidate = () => {
+    let isError = false;
+    const updatedValues = [];
+    formData.forEach((field) => {
+      const { type, range, required } = field;
+      const value = values.find((element) => element.id === field.id);
+      value.errors = [];
+      if (range && value.value.length > range[1]) {
+        value.errors.push(`Text must be under ${range[1]} letters.`);
+        isError = true;
+      }
+      if (required && renderCheck(field)) {
+        if (type === "text" && value.value.length < range[0]) {
+          value.errors.push("Text field must be filled.");
+          isError = true;
+        } else if ((type === "select" || type === "radio") && value.value <= 0) {
+          value.errors.push("An option must be selected.");
+          isError = true;
+        }
+      }
+      updatedValues.push(value);
+    });
+    setValues(updatedValues);
+    if (isError === false) {
+      // eslint-disable-next-line no-alert
+      alert("Valid form");
+    }
+  };
 
   const createField = (data) => {
+    const value = values.find((element) => data.id === element.id);
     switch (data.type) {
       case "text": {
-        const value = values.find((element) => data.id === element.id);
         return (
           <Input
-            type="text"
             name={data.id}
             value={value ? value.value : ""}
             onChange={handleValueChange}
+            errors={value ? value.errors : []}
           />
         );
       }
       case "select":
         return (
-          <Select
+          <CustomSelect
             options={createOptions(data.options)}
             name={data.id}
             onChange={handleSelectChange}
-            theme={defaultTheme}
+            errors={value ? value.errors : []}
           />
         );
       case "radio":
-        return <Radio data={data} />;
+        return (
+          <Radio
+            name={data.id}
+            options={data.options}
+            onChange={handleRadioChange}
+            errors={value ? value.errors : []}
+          />
+        );
       default:
         return null;
     }

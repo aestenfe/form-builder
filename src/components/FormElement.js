@@ -3,7 +3,7 @@ import { bool, node, string } from "prop-types";
 import styled from "styled-components";
 
 const FormContainer = styled.div`
-  padding: 0.6em 5%;
+  padding: 0.1em 5%;
 `;
 
 const FormElement = ({ children, question, isRequired }) => (

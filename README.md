@@ -102,4 +102,5 @@ For part 1 I created a json file which will contain the information for the form
 
 - Testing with Jest and the react testing library
 - Splitting the `App.js` in smaller parts with `ImportService` & `ValidationService`
+- Implementing a resoponsive design
 - Creating an automated component documentation with ie. `docgen`
